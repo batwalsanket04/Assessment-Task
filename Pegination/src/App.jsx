@@ -1,105 +1,78 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-const App = () => {
-
-  const [blogs,Setblogs]=useState([])
-  const [currentPage,Setcurrentpage]=useState(0)
+ import React, { useEffect, useState } from 'react'
+ import axios from 'axios'
  
-  const PAGE_SIZE=6;
+ const App = () => {
+
+  const [blogs,setblogs]=useState([])
+  const [currentPage,setcurrentpage]=useState(0)
+
+  const page_size=4
 
   const BASE_URL="https://mcpbe.mangochairs.com"
 
-  const fetchdata=async()=>{
-try {
+  const fetchData=async()=>{
+    try {
+      const res=await axios.get("https://mcpbe.mangochairs.com/frontend/blogs/?page=1&page_size=12");
+      console.log(res)
+      setblogs(res.data.blogs)
 
-  const res=await axios.get("https://mcpbe.mangochairs.com/frontend/blogs/?page=1&page_size=12")
-  console.log(res.data)
-  Setblogs(res.data.blogs)
-  
-} catch (error) {
-  console.log(error)
-}
+    } catch (error) {
+       console.log(error)
+    }
   }
-
-  useEffect(()=>{
-    fetchdata();
-  },[])
-
-
-  const totalProduct= blogs.length;
-  const noofPages=Math.ceil(totalProduct/PAGE_SIZE)
-
-
-  const start=currentPage * PAGE_SIZE;
-  const end=start+PAGE_SIZE
-
-const handlePage=(n)=>{
-  Setcurrentpage(n)
-}
-
-
-
-  return (
-    <div>
-        <h1 className='bg-primary text-center text-dark p-3 mb-3'>Blogs Page</h1>
  
-      <div className="container ">
+   useEffect(()=>{
+  fetchData();
+   },[])
+
+
+   const start=currentPage*page_size
+   const end=start+page_size
+
+
+   const total_product=blogs.length;
+   const noOfpages=Math.ceil(total_product/page_size)
+
+   const HandleSubmit=(n)=>{
+    setcurrentpage(n)
+   }
+
+   return (
+     <div>
+      <div className="container">
         <div className="row">
-        {blogs.slice(start, end).map((val) => (
-          <div className="col-md-4 mb-4" key={val.id}>
-            <div className="card h-100 shadow-sm">
-
-              {/* Image */}
-              <div className="d-flex justify-content-center p-3">
-                <img
-                  src={val.image ? `${BASE_URL}${val.image}` : ""}
-                  alt={val.title}
-                  className="img-fluid rounded"
-                  style={{
-                    height: "180px",
-                    width: "180px",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-
-              {/* Body */}
-              <div className="card-body text-center d-flex flex-column">
-                <small className="text-muted mb-2">
-                  {val.publish_date}
-                </small>
-
-                <h5 className="card-title fw-bold">
-                  {val.title}
-                </h5>
-
-                <p className="card-text text-secondary">
-                  {val.product_category_name}
-                </p>
-
-                {/* Push button to bottom */}
-                <div className="mt-auto">
-                  <button className="btn btn-primary w-100">
-                    Read More
-                  </button>
+          {
+            blogs.slice(start,end).map((val,index)=>(
+              <div className="col-md-4">
+                <div className="card my-2" >
+                  <img src= {val.image ? `${BASE_URL}${val.image}`:""} alt="" className="m-auto" style={{height:"200px", width:"200px"}} />
+                  <div className="card-body">
+                    <h5>{val.title}</h5>
+                    <h4 className='text-secondary'>{val.product_category_name}</h4>
+                    <p>{val.publish_date}</p>
+                    <div className="card-footer">
+                      <button className='btn btn-primary'>Click</button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))
+          }
+        </div>
+      </div>
 
-            </div>
-          </div>
-        ))}
-      </div>
-      </div>
-      <div className='text-center mx-4'>
-        {
-          [...Array(noofPages).keys()].map((n)=>(
-<button className='btn btn-outline-primary mx-4' onClick={()=>handlePage(n)}>{n}</button>
-          ))
-        }
-      </div>
-      
-    </div>
-  )
-}
+   <div className='text-center '>
+     {
+      [...Array(noOfpages).keys()].map((n)=>(
+        <button className='btn btn-outline-primary mx-2 ' onClick={()=>HandleSubmit(n)}>{n}</button>
 
-export default App
+      ))
+    }
+   </div>
+       
+     </div>
+   )
+ }
+ 
+ export default App
+ 
