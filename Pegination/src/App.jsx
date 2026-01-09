@@ -5,6 +5,7 @@
 
   const [blogs,setblogs]=useState([])
   const [currentPage,setcurrentpage]=useState(0)
+  const [selectedCategory,SetselectedCategory]=useState("All")
 
   const page_size=4
 
@@ -26,26 +27,32 @@
    },[])
 
 
-   const start=currentPage*page_size
-   const end=start+page_size
+   const start=currentPage* page_size
+   const end=start + page_size
 
 
-   const total_product=blogs.length;
-   const noOfpages=Math.ceil(total_product/page_size)
+   const totolPtoduct=blogs.length;
 
-   const HandleSubmit=(n)=>{
+   const noofpages= Math.ceil(totolPtoduct/page_size)
+
+   const HandlePage=(n)=>{
     setcurrentpage(n)
    }
 
+  
+   
+   
    return (
      <div>
+  
+
       <div className="container">
         <div className="row">
           {
             blogs.slice(start,end).map((val,index)=>(
               <div className="col-md-4">
                 <div className="card my-2" >
-                  <img src= {val.image ? `${BASE_URL}${val.image}`:""} alt="" className="m-auto" style={{height:"200px", width:"200px"}} />
+                  <img src={val.image ? `${BASE_URL}${val.image}`:""}  className="m-auto" alt="" style={{height:"200px", width:"200px"}} />
                   <div className="card-body">
                     <h5>{val.title}</h5>
                     <h4 className='text-secondary'>{val.product_category_name}</h4>
@@ -62,12 +69,13 @@
       </div>
 
    <div className='text-center '>
-     {
-      [...Array(noOfpages).keys()].map((n)=>(
-        <button className='btn btn-outline-primary mx-2 ' onClick={()=>HandleSubmit(n)}>{n}</button>
+    {
+      [...Array(noofpages).keys()].map((n)=>(
 
+        <button className='btn btn-outline-primary mx-2' onClick={()=>HandlePage(n)}>{n}</button>
       ))
     }
+     
    </div>
        
      </div>
